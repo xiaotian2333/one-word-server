@@ -5,15 +5,15 @@ import axios from 'axios';
 import logger from './lib/logger.js';
 import getip from './lib/ip.js';
 
-const dataPath = path.join(process.cwd().replace(/\\/g, '/'), '心跳引擎.json');
+const _Path = path.join(process.cwd().replace(/\\/g, '/'));
 const app = express();
 const PORT = 7860;
-//const dataurl = 'http://127.0.0.1:8080/%E4%B8%80%E8%A8%80/%E5%BF%83%E8%B7%B3%E5%BC%95%E6%93%8E.json'; // 示例URL
-const dataurl = process.env.DATAURL
+const dataurl = process.env.DATAURL || 'https://oss.xt-url.com/%E4%B8%80%E8%A8%80/%E5%BF%83%E8%B7%B3%E5%BC%95%E6%93%8E.json'
 
 // 读取 JSON 数据
 let heartbeatData;
 try {
+    const dataPath = path.join(_Path, '心跳引擎.json')
     if (fs.existsSync(dataPath)) {
         const rawData = fs.readFileSync(dataPath, 'utf8');
         heartbeatData = JSON.parse(rawData);
@@ -34,22 +34,20 @@ app.use((req, res, next) => {
 });
 
 // 一言 API 路由
-app.get('/', (req, res) => {
+app.get('/get', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
     try {
         // 从 data 数组中随机选择一条数据
         const randomIndex = Math.floor(Math.random() * heartbeatData.data.length);
         const randomSentence = heartbeatData.data[randomIndex];
-        
+
         // 构造返回的 JSON 响应
         const response = {
             sentence: randomSentence.sentence,
             speaker: randomSentence.speaker,
             chapter_title: randomSentence.chapter_title,
-            version: heartbeatData.version,
-            update: heartbeatData.update
         };
-        
+
         res.json(response);
     } catch (error) {
         logger.error('生成一言失败:', error);
@@ -62,17 +60,36 @@ app.get('/', (req, res) => {
 });
 
 // 获取所有数据的路由（可选）
-app.get('/all', (req, res) => {
+app.get('/info', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
     res.json({
         title: heartbeatData.title,
         author: heartbeatData.author,
+        cover: heartbeatData.cover,
         description: heartbeatData.description,
         total_sentences: heartbeatData.data.length,
         version: heartbeatData.version,
-        update: heartbeatData.update
+        update: heartbeatData.update,
+        instructions: heartbeatData.instructions,
+        data_source: heartbeatData.data_source,
+        former_name: heartbeatData.former_name
     });
 });
+
+app.get('/', (req, res) => {
+    logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
+    // 返回index.html
+    const indexPath = path.join(_Path, 'index.html');
+    fs.readFile(indexPath, 'utf8', (err, data) => {
+        if (err) {
+            logger.error('读取 index.html 文件失败:', err);
+            res.status(500).send('服务器内部错误');
+        } else {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(data);
+        }
+    });
+})
 
 // 启动服务器
 app.listen(PORT, () => {
