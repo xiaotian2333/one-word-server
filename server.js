@@ -33,7 +33,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// 一言 API 路由
+// 一言 API 页
 app.get('/get', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
     try {
@@ -59,7 +59,7 @@ app.get('/get', (req, res) => {
     }
 });
 
-// 获取所有数据的路由（可选）
+// api统计页
 app.get('/info', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
     res.json({
@@ -76,6 +76,7 @@ app.get('/info', (req, res) => {
     });
 });
 
+// 主页
 app.get('/', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
     // 返回index.html
@@ -90,6 +91,13 @@ app.get('/', (req, res) => {
         }
     });
 })
+
+// 404时跳转回主页
+app.use((req, res) => {
+    logger.http(`[${getip(req)}][${req.method}]请求不存在的页面 ${req.url}`)
+    res.redirect('/');
+});
+
 
 // 启动服务器
 app.listen(PORT, () => {
