@@ -12,7 +12,6 @@ const INDEX_HTML = `<!doctype html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>心跳引擎一言</title>
-    <link rel="icon" type="image/png" href="icon.png">
     <style>
         .container {
             width: 20%;
@@ -20,7 +19,7 @@ const INDEX_HTML = `<!doctype html>
             background-color: rgba(240, 240, 240, 0.719);
             padding: 2% 5%;
             border-radius: 50px
-        }
+            }
         ul {padding-left: 20px;}
         ul li {line-height: 2.3}
         a {color: #d256eb}
@@ -134,9 +133,15 @@ async function handleRequest(request, env) {
     return createHtmlResponse(INDEX_HTML);
   }
 
-  // 网站logo - 返回404
-  if (path === '/icon.png' || path === '') {
-    return new Response('Not Found', { status: 404 });
+  // 网站logo - 返回重定向到oss站
+  if (path === '/favicon.ico') {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': 'https://oss.xt-url.com/web-logo/heartbeat-engine-api.xt-url.com.ico',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   }
 
   // /get 路径 - 返回随机一言

@@ -76,6 +76,13 @@ app.get('/info', (req, res) => {
     });
 });
 
+// 网站logo
+app.get('/favicon.ico', (req, res) => {
+    logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
+    // 重定向到oss站
+    res.redirect('https://oss.xt-url.com/web-logo/heartbeat-engine-api.xt-url.com.ico');
+})
+
 // 主页
 app.get('/', (req, res) => {
     logger.http(`[${getip(req)}][${req.method}]请求 ${req.url}`)
