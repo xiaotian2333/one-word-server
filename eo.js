@@ -83,13 +83,13 @@ function createHtmlResponse(html, status = 200) {
     })
 }
 
-// 日志函数
-function logRequest(request, path) {
-    const ip = request.headers.get('x-forwarded-for') ||
-        request.headers.get('cf-connecting-ip') ||
-        'unknown'
-    console.log(`[${ip}][${request.method}]请求 ${path}`)
-}
+// 日志函数，无调用，注释掉以节省函数执行时间
+//function logRequest(request, path) {
+//    const ip = request.headers.get('x-forwarded-for') ||
+//        request.headers.get('cf-connecting-ip') ||
+//        'unknown'
+//    console.log(`[${ip}][${request.method}]请求 ${path}`)
+//}
 
 // 主处理函数
 async function handleRequest(request) {
@@ -117,7 +117,7 @@ async function handleRequest(request) {
     }
 
     // 根据路径处理请求
-    logRequest(request, path)
+    // logRequest(request, path) // 注释日志记录，节省函数执行时间
 
     // 主页 - 返回HTML页面
     if (path === '/' || path === '') {
