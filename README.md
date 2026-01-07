@@ -2,12 +2,12 @@
   
 一言api服务端
 
-支持nodejs及cloudflare work（由大模型生成，人工微调代码）  
+支持`nodejs`、`cloudflare work`和`Edge Functions`（由大模型生成，人工微调代码）  
 目前仅开启心跳引擎一言
 
 ## 预览
 
-[在线api（cloudflare work）](http://heartbeat-engine-api.xt-url.com/)
+[在线api（Edge Functions）](http://heartbeat-engine-api.xt-url.com/)
 
 ## 安装与更新
 
